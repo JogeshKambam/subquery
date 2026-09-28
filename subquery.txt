@@ -1,0 +1,596 @@
+select ename from emp where deptno=(select deptno from dept where dname ="sales") and
+                                      -> sal>(select sal from emp where ename="smith");
++--------+
+| ename  |
++--------+
+| ALLEN  |
+| WARD   |
+| MARTIN |
+| BLAKE  |
+| TURNER |
+| JAMES  |
++--------+
+
+52.
+ select * from emp where job="analyst" and deptno=(select deptno from dept where location="dallas");
++-------+-------+---------+------+------------+------+------+--------+
+| empno | ename | job     | mgr  | hiredate   | sal  | comm | deptno |
++-------+-------+---------+------+------------+------+------+--------+
+|  7788 | SCOTT | ANALYST | 7566 | 1987-07-13 | 3000 | NULL |     20 |
+|  7902 | FORD  | ANALYST | 7566 | 1981-12-03 | 3000 | NULL |     20 |
++-------+-------+---------+------+------------+------+------+--------+
+
+53.
+ select * from emp where deptno in (select deptno from dept where location like "%s");
++-------+-------+---------+------+------------+------+------+--------+
+| empno | ename | job     | mgr  | hiredate   | sal  | comm | deptno |
++-------+-------+---------+------+------------+------+------+--------+
+|  7369 | SMITH | CLERK   | 7902 | 1980-12-17 |  800 | NULL |     20 |
+|  7566 | JONES | MANAGER | 7839 | 1981-04-02 | 2975 | NULL |     20 |
+|  7788 | SCOTT | ANALYST | 7566 | 1987-07-13 | 3000 | NULL |     20 |
+|  7876 | ADAMS | CLERK   | 7788 | 1987-07-13 | 1100 | NULL |     20 |
+|  7902 | FORD  | ANALYST | 7566 | 1981-12-03 | 3000 | NULL |     20 
+
+54.
+ select ename,sal*12 as annual_sal from emp where sal>all(select sal from emp where job="manager");
++-------+------------+
+| ename | annual_sal |
++-------+------------+
+| SCOTT |      36000 |
+| KING  |      60000 |
+| FORD  |      36000 |
++-------+------------+
+
+55.
+select *  from emp where hiredate >all(select hiredate from emp where job="salesman");
++-------+--------+-----------+------+------------+------+------+--------+
+| empno | ename  | job       | mgr  | hiredate   | sal  | comm | deptno |
++-------+--------+-----------+------+------------+------+------+--------+
+|  7788 | SCOTT  | ANALYST   | 7566 | 1987-07-13 | 3000 | NULL |     20 |
+|  7839 | KING   | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10 |
+|  7876 | ADAMS  | CLERK     | 7788 | 1987-07-13 | 1100 | NULL |     20 |
+|  7900 | JAMES  | CLERK     | 7698 | 1981-12-03 |  950 | NULL |     30 |
+|  7902 | FORD   | ANALYST   | 7566 | 1981-12-03 | 3000 | NULL |     20 |
+|  7934 | MILLER | CLERK     | 7782 | 1982-01-23 | 1300 | NULL |     10 |
++-------+--------+-----------+------+------------+------+------+--------
+
+56.
+select sal
+                                      -> from emp
+                                      -> where job="president";
++------+
+| sal  |
++------+
+| 5000 |
++------+
+
+57.
+ select deptno,count(*)
+                                      -> from emp
+                                      -> group by deptno;
++--------+----------+
+| deptno | count(*) |
++--------+----------+
+|     10 |        3 |
+|     20 |        5 |
+|     30 |        6 |
+
+58.
+
+
+59.
+ select *
+ -> from emp
+    -> where sal>(select sal from emp where ename ="allen") and sal>(select sal from emp where ename="smith");
++-------+-------+-----------+------+------------+------+------+--------+
+| empno | ename | job       | mgr  | hiredate   | sal  | comm | deptno |
++-------+-------+-----------+------+------------+------+------+--------+
+|  7566 | JONES | MANAGER   | 7839 | 1981-04-02 | 2975 | NULL |     20 |
+|  7698 | BLAKE | MANAGER   | 7839 | 1981-05-01 | 2850 | NULL |     30 |
+|  7782 | CLARK | MANAGER   | 7839 | 1981-06-09 | 2450 | NULL |     10 |
+|  7788 | SCOTT | ANALYST   | 7566 | 1987-07-13 | 3000 | NULL |     20 |
+|  7839 | KING  | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10 |
+|  7902 | FORD  | ANALYST   | 7566 | 1981-12-03 | 3000 | NULL |     20 |
++-------+-------+-----------+------+------------+------+------+------
+
+60.
+ select *
+                                      -> from emp
+                                      -> where sal>(
+                                      -> select sal*1.10 from emp where ename ="allen");
++-------+-------+-----------+------+------------+------+------+--------+
+| empno | ename | job       | mgr  | hiredate   | sal  | comm | deptno |
++-------+-------+-----------+------+------------+------+------+--------+
+|  7566 | JONES | MANAGER   | 7839 | 1981-04-02 | 2975 | NULL |     20 |
+|  7698 | BLAKE | MANAGER   | 7839 | 1981-05-01 | 2850 | NULL |     30 |
+|  7782 | CLARK | MANAGER   | 7839 | 1981-06-09 | 2450 | NULL |     10 |
+|  7788 | SCOTT | ANALYST   | 7566 | 1987-07-13 | 3000 | NULL |     20 |
+|  7839 | KING  | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10 |
+|  7902 | FORD  | ANALYST   | 7566 | 1981-12-03 | 3000 | NULL |     20 |
++-------+-------+-----------+------+------------+------+------+--------+
+
+
+62.
+ select hiredate,mgr from emp where deptno=(select deptno from dept where location="chicago");
++------------+------+
+| hiredate   | mgr  |
++------------+------+
+| 1981-02-20 | 7698 |
+| 1981-02-22 | 7698 |
+| 1981-09-28 | 7698 |
+| 1981-05-01 | 7839 |
+| 1981-09-08 | 7698 |
+| 1981-12-03 | 7698 |
++------------+------+
+
+
+63.
+ select ename,job
+                                      -> from emp
+                                      -> where ename like"s%" or ename like "p%";
++-------+---------+
+| ename | job     |
++-------+---------+
+| SMITH | CLERK   |
+| SCOTT | ANALYST |
++-------+---------+
+
+64.
+ select deptno,count(*)
+                                      -> from emp
+                                      -> where deptno=(select deptno from dept where location="chicago")
+                                      -> group by deptno;
++--------+----------+
+| deptno | count(*) |
++--------+----------+
+|     30 |        6 |
++--------+----------+
+
+
+65.
+select ename,job,
+                                      -> (select location from dept where deptno=emp.deptno) location
+                                      -> from emp
+                                      -> where job="manager"
+                                      -> and deptno=(select deptno from dept where location="chicago");
++-------+---------+----------+
+| ename | job     | location |
++-------+---------+----------+
+| BLAKE | MANAGER | Chicago  |
++-------+---------+----------+
+
+66.
+ select ename,deptno from emp where deptno in(select deptno from dept where dname in("sales","research")) and empno in (select mgr from emp group by mgr having count(*)>=2);
++-------+--------+
+| ename | deptno |
++-------+--------+
+| JONES |     20 |
+| BLAKE |     30 |
++-------+--------+
+
+67.
+ select distinct location from dept where deptno in ( select deptno from emp where hiredate between "1981-01-01" and "1981-12-31");
++----------+
+| location |
++----------+
+| New york |
+| Dallas   |
+| Chicago  |
++----------+
+
+68.
+ select ename
+                                      -> from emp
+                                      -> where sal>all(select sal from emp where job="analyst");
++-------+
+| ename |
++-------+
+| KING  |
++-------+
+
+69.
+ select ename from emp  where sal<any(select sal from emp where job="manager");
++--------+
+| ename  |
++--------+
+| SMITH  |
+| ALLEN  |
+| WARD   |
+| MARTIN |
+| BLAKE  |
+| CLARK  |
+| TURNER |
+| ADAMS  |
+| JAMES  |
+| MILLER |
++--------+
+
+70.
+ select ename  from emp where hiredate>all( select hiredate from emp where deptno=30);
++--------+
+| ename  |
++--------+
+| SCOTT  |
+| ADAMS  |
+| MILLER |
++--------+
+
+71.
+ select *  from emp where deptno in( select deptno from dept where location in("new york" , "dallas"));
++-------+--------+-----------+------+------------+------+------+--------+
+| empno | ename  | job       | mgr  | hiredate   | sal  | comm | deptno |
++-------+--------+-----------+------+------------+------+------+--------+
+|  7782 | CLARK  | MANAGER   | 7839 | 1981-06-09 | 2450 | NULL |     10 |
+|  7839 | KING   | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10 |
+|  7934 | MILLER | CLERK     | 7782 | 1982-01-23 | 1300 | NULL |     10 |
+|  7369 | SMITH  | CLERK     | 7902 | 1980-12-17 |  800 | NULL |     20 |
+|  7566 | JONES  | MANAGER   | 7839 | 1981-04-02 | 2975 | NULL |     20 |
+|  7788 | SCOTT  | ANALYST   | 7566 | 1987-07-13 | 3000 | NULL |     20 |
+|  7876 | ADAMS  | CLERK     | 7788 | 1987-07-13 | 1100 | NULL |     20 |
+|  7902 | FORD   | ANALYST   | 7566 | 1981-12-03 | 3000 | NULL |     20 |
++-------+--------+-----------+------+------------+------+------+--------+
+
+72.
+ select  distinct location  from dept where deptno in( select deptno  from emp where deptno=20 and comm is not null);
++----------+
+| location |
++----------+
+| Dallas   |
++----------+
+
+73.
+ select *  from emp where job=( select job from emp where ename="jones") and deptno=( select deptno from dept  where location ="chicago");
++-------+-------+---------+------+------------+------+------+--------+
+| empno | ename | job     | mgr  | hiredate   | sal  | comm | deptno |
++-------+-------+---------+------+------------+------+------+--------+
+|  7698 | BLAKE | MANAGER | 7839 | 1981-05-01 | 2850 | NULL |     30 |
++-------+-------+---------+------+------------+------+------+--------+
+
+74.
+ select ename
+                                      -> from emp
+                                      -> where sal>(
+                                      -> select sal
+                                      -> from emp
+                                      -> where ename ="scott");
++-------+
+| ename |
++-------+
+| KING  |
+
+75.
+ select deptno,count(*) as emp_count,avg(sal) as avg_sal
+                                      -> from emp
+                                      -> where sal>3000
+                                      -> group by deptno;
++--------+-----------+-----------+
+| deptno | emp_count | avg_sal   |
++--------+-----------+-----------+
+|     10 |         1 | 5000.0000 |
++--------+-----------+-----------+
+
+76.
+
+
+
+77.
+ select *  from emp where deptno=30 and job=( select job from emp where ename="james");
++-------+-------+-------+------+------------+-----+------+--------+
+| empno | ename | job   | mgr  | hiredate   | sal | comm | deptno |
++-------+-------+-------+------+------------+-----+------+--------+
+|  7900 | JAMES | CLERK | 7698 | 1981-12-03 | 950 | NULL |     30 |
++-------+-------+-------+------+------------+-----+------+--------+
+
+78.
+ select ename
+                                      -> from emp
+                                      -> where ename like "b%" and job=(
+                                      -> select job
+                                      -> from emp
+                                      -> where ename="clark");
++-------+
+| ename |
++-------+
+| BLAKE |
++-------+
+
+79.
+ select dname,location from dept where deptno in( select deptno from emp where sal=1250);
++-------+----------+
+| dname | location |
++-------+----------+
+| Sales | Chicago  |
++-------+----------+
+
+80.There is no it field in the table.
+select dname,location
+                                      -> from dept
+                                      -> where deptno in(
+                                      -> select deptno
+                                      -> from emp
+                                      -> where ename like "%m%");
++------------+----------+
+| dname      | location |
++------------+----------+
+| Accounting | New york |
+| Research   | Dallas   |
+| Sales      | Chicago  |
++------------+----------+
+
+81.
+ select deptno
+                                      -> from emp
+                                      -> where ename like "%a%"
+                                      -> group by deptno
+                                      -> having count(*)>=4;
++--------+
+| deptno |
++--------+
+|     30 |
++--------+
+82.
+ select ename,sal
+                                      -> from emp
+                                      -> where job="salesman";
++--------+------+
+| ename  | sal  |
++--------+------+
+| ALLEN  | 1600 |
+| WARD   | 1250 |
+| MARTIN | 1250 |
+| TURNER | 1500 |
++--------+------+
+
+83.
+ select ename from emp where sal>2000  and extract(year from hiredate) between 1980 and 1986 and (  ename like "%a" or ename like "%e" or ename like "%i" or ename like "%o" or ename like "%u");
++-------+
+| ename |
++-------+
+| BLAKE |
++-------+
+
+84.
+ select ename,hiredate
+                                      -> from emp
+                                      -> where extract(year from hiredate) between 1982 and 1985 and sal between 1000 and 2800;
++--------+------------+
+| ename  | hiredate   |
++--------+------------+
+| MILLER | 1982-01-23 |
++--------+------------+
+
+85.
+ select location,count(*) from dept group by location having count(*)>1;
+Empty set 
+
+86.
+ select deptno,hiredate,count(*) as emp_count
+                                      -> from emp
+                                      -> group by deptno,hiredate
+                                      -> having count(*)>1;
++--------+------------+-----------+
+| deptno | hiredate   | emp_count |
++--------+------------+-----------+
+|     20 | 1987-07-13 |         2 |
++--------+------------+-----------+
+
+87.
+ select ename
+                                      -> from emp
+                                      -> where sal<(
+                                      -> select sal
+                                      -> from emp where ename="king")
+                                      -> and sal<(
+                                      -> select sal
+                                      -> from emp where ename="ford");
++--------+
+| ename  |
++--------+
+| SMITH  |
+| ALLEN  |
+| WARD   |
+| JONES  |
+| MARTIN |
+| BLAKE  |
+| CLARK  |
+| TURNER |
+| ADAMS  |
+| JAMES  |
+| MILLER |
++--------+
+
+88.
+ select *  from emp where deptno in( select deptno from dept where location in ("new york","chicago"));
++-------+--------+-----------+------+------------+------+------+--------+
+| empno | ename  | job       | mgr  | hiredate   | sal  | comm | deptno |
++-------+--------+-----------+------+------------+------+------+--------+
+|  7782 | CLARK  | MANAGER   | 7839 | 1981-06-09 | 2450 | NULL |     10 |
+|  7839 | KING   | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10 |
+|  7934 | MILLER | CLERK     | 7782 | 1982-01-23 | 1300 | NULL |     10 |
+|  7499 | ALLEN  | SALESMAN  | 7698 | 1981-02-20 | 1600 |  300 |     30 |
+|  7521 | WARD   | SALESMAN  | 7698 | 1981-02-22 | 1250 |  500 |     30 |
+|  7654 | MARTIN | SALESMAN  | 7698 | 1981-09-28 | 1250 | 1400 |     30 |
+|  7698 | BLAKE  | MANAGER   | 7839 | 1981-05-01 | 2850 | NULL |     30 |
+|  7844 | TURNER | SALESMAN  | 7698 | 1981-09-08 | 1500 |    0 |     30 |
+|  7900 | JAMES  | CLERK     | 7698 | 1981-12-03 |  950 | NULL |     30 |
++-------+--------+-----------+------+------------+------+------+--------+
+
+89.
+select ename,hiredate  from emp where hiredate < all( select hiredate from emp where job="analyst");
++--------+------------+
+| ename  | hiredate   |
++--------+------------+
+| SMITH  | 1980-12-17 |
+| ALLEN  | 1981-02-20 |
+| WARD   | 1981-02-22 |
+| JONES  | 1981-04-02 |
+| MARTIN | 1981-09-28 |
+| BLAKE  | 1981-05-01 |
+| CLARK  | 1981-06-09 |
+| KING   | 1981-11-17 |
+| TURNER | 1981-09-08 |
++--------+------------+
+
+90.
+ select ename
+                                      -> from emp
+                                      -> where deptno=(
+                                      -> select deptno
+                                      -> from dept
+                                      -> where dname="research")
+                                      -> and sal>(
+                                      -> select sal
+                                      -> from emp
+                                      -> where ename="adams");
++-------+
+| ename |
++-------+
+| JONES |
+| SCOTT |
+| FORD  |
++-------+
+
+91.
+ select *
+                                      -> from emp
+                                      -> where job="manager"
+                                      -> and ename like "%k_"
+                                      -> and sal between 2500 and 2851;
++-------+-------+---------+------+------------+------+------+--------+
+| empno | ename | job     | mgr  | hiredate   | sal  | comm | deptno |
++-------+-------+---------+------+------------+------+------+--------+
+|  7698 | BLAKE | MANAGER | 7839 | 1981-05-01 | 2850 | NULL |     30 |
++-------+-------+---------+------+------------+------+------+--------+
+
+92.
+ SELECT E.*,        E.SAL * 12 AS ANNUAL_SALARY FROM EMP E WHERE DEPTNO = (     SELECT DEPTNO     FROM DEPT     WHERE location = 'dallas' );
++-------+-------+---------+------+------------+------+------+--------+---------------+
+| empno | ename | job     | mgr  | hiredate   | sal  | comm | deptno | ANNUAL_SALARY |
++-------+-------+---------+------+------------+------+------+--------+---------------+
+|  7369 | SMITH | CLERK   | 7902 | 1980-12-17 |  800 | NULL |     20 |          9600 |
+|  7566 | JONES | MANAGER | 7839 | 1981-04-02 | 2975 |  200 |     20 |         35700 |
+|  7788 | SCOTT | ANALYST | 7566 | 1987-07-13 | 3000 | NULL |     20 |         36000 |
+|  7876 | ADAMS | CLERK   | 7788 | 1987-07-13 | 1100 | NULL |     20 |         13200 |
+|  7902 | FORD  | ANALYST | 7566 | 1981-12-03 | 3000 | NULL |     20 |         36000 |
++-------+-------+---------+------+------------+------+------+--------+---------------+
+5 rows in set 
+
+93.
+ select ename from emp where sal>( select sal from emp where ename="turner") and deptno=30 and deptno= (select deptno from dept where location ="chicago");
++-------+
+| ename |
++-------+
+| ALLEN |
+| BLAKE |
++-------+
+
+94.
+ select ename from emp  where sal<all( select sal from emp  where job="analyst");
++--------+
+| ename  |
++--------+
+| SMITH  |
+| ALLEN  |
+| WARD   |
+| JONES  |
+| MARTIN |
+| BLAKE  |
+| CLARK  |
+| TURNER |
+| ADAMS  |
+| JAMES  |
+| MILLER |
++--------+
+
+95.
+ SELECT DNAME
+                                      -> FROM DEPT
+                                      -> WHERE DEPTNO IN (
+                                      -> SELECT DEPTNO
+                                      ->FROM EMP
+                                      ->WHERE MGR = (
+                                      ->SELECT EMPNO
+                                      ->FROM EMP
+                                      ->  WHERE ENAME = 'BLAKE'
+                                      ->     )
+                                      -> );
++-------+
+| DNAME |
++-------+
+| Sales |
++-------+
+
+96.
+ select hiredate
+                                      -> from emp
+                                      -> where deptno=(
+                                      -> select deptno
+                                      -> from dept
+                                      -> where dname="sales") and
+                                      -> hiredate<(
+                                      -> select hiredate
+                                      -> from emp
+                                      -> where ename="martin");
++------------+
+| hiredate   |
++------------+
+| 1981-02-20 |
+| 1981-02-22 |
+| 1981-05-01 |
+| 1981-09-08 |
++------------+
+
+97.
+ select deptno
+                                      -> from emp
+                                      -> where job="manager"
+                                      -> and deptno=(
+                                      -> select deptno
+                                      -> from dept
+                                      -> where dname ="sales");
++--------+
+| deptno |
++--------+
+|     30 |
++--------+
+
+98.
+ select location
+                                      -> from dept
+                                      -> where deptno in(
+                                      -> select deptno
+                                      -> from emp
+                                      -> where ename not like "s%" and
+                                      -> extract(year from hiredate ) between 1980 and 1982);
++----------+
+| location |
++----------+
+| New york |
+| Dallas   |
+| Chicago  |
++----------+
+
+99.
+ select job, avg(sal) as avg_sal, max(sal) as max_sal, sum(sal) as total_sal from emp where job !="salesman" group by job;
++-----------+-----------+---------+-----------+
+| job       | avg_sal   | max_sal | total_sal |
++-----------+-----------+---------+-----------+
+| CLERK     | 1037.5000 |    1300 |      4150 |
+| MANAGER   | 2758.3333 |    2975 |      8275 |
+| ANALYST   | 3000.0000 |    3000 |      6000 |
+| PRESIDENT | 5000.0000 |    5000 |      5000 |
++-----------+-----------+---------+-----------+
+
+100.
+ Select ename
+ -> from emp
+ -> where ename like "%a%a"        
+ ->   and deptno = 20                
+ ->   and sal >= 1099 and sal <= 1500 
+ ->   and hiredate between '1985-01-01' and '1988-12-31';
++-------+
+| ENAME |
++-------+
+| ADAMS |
++-------+
+
