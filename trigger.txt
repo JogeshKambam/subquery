@@ -1,5 +1,5 @@
-1. create employees table
-
+1.  employees table
+use class;
 
 create table employees (
     emp_id int primary key,
@@ -10,8 +10,9 @@ create table employees (
 );
 
 
-2. create salary_audit table
+2.  salary_audit table
 
+use class;
 create table salary_audit (
     audit_id int  primary key,
     emp_id int,
@@ -102,8 +103,7 @@ end $$
 delimiter ;
 
 
-6. insert sample employee records
-
+6. 
 
 insert into employees
 values
@@ -111,9 +111,9 @@ values
 (2, 'priya', 'reddy', 30000, 20),
 (3, 'arjun', 'kumar', 35000, 30);
 
- 7. update an employee's salary
+ 7. update an emp sal
 
-Here, employee 1 salary changes from 25000 to 28000 using update .
+Here, emp 1 sal changes from 25000 to 28000 using update .
 
 
 update employees
@@ -123,7 +123,7 @@ where emp_id = 1;
 
  8. delete an employee
 
-Here, employee 3 is deleted from the employees table.
+Here, emp 3 is deleted from the employees table.
 
 
 delete from employees
@@ -135,7 +135,7 @@ where emp_id = 3;
 select * from employees;
 
 
- 10. check salary audit records
+ 10. 
 
 select * from salary_audit;
 
