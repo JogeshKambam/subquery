@@ -1,0 +1,86 @@
+# 1. 
+
+def apply_operation(numbers, operation):
+    return [operation(num) for num in numbers]
+
+numbers = [1, 2, 3, 4, 5]
+
+result = apply_operation(numbers, lambda x: x * x)
+print(result)
+
+result2 = apply_operation(numbers, lambda x: x + 10)
+print(result2)
+
+
+# 2. 
+
+def filter_items(items, predicate):
+    return [item for item in items if predicate(item)]
+
+numbers = [1, 2, 3, 4, 5, 6]
+
+result = filter_items(numbers, lambda x: x % 2 == 0)
+print(result)
+
+values = [5, 12, 8, 20, 15]
+
+result2 = filter_items(values, lambda x: x > 10)
+print(result2)
+
+
+# 3. 
+
+def compose(f, g):
+    return lambda x: f(g(x))
+
+f = lambda x: x + 5
+g = lambda x: x * 2
+
+result = compose(f, g)
+
+print(result(10))
+print(result(3))
+
+
+# 4. 
+
+def sort_by_key(objects, key_func):
+    return sorted(objects, key=key_func)
+
+students = [
+    {"name": "Ravi", "marks": 85},
+    {"name": "Anu", "marks": 92},
+    {"name": "Kiran", "marks": 78},
+    {"name": "Priya", "marks": 88}
+]
+
+result1 = sort_by_key(students, lambda x: x["marks"])
+result2 = sort_by_key(students, lambda x: x["name"])
+
+print(result1)
+print(result2)
+
+
+# 5. 
+
+numbers = ["1", "2", "3", "4", "5"]
+
+result1 = list(map(lambda x: int(x) ** 2, numbers))
+result2 = list(map(lambda x: int(x) ** 2, ["1", "2"]))
+
+print(result1)
+print(result2)
+
+
+# 6. 
+
+from functools import reduce
+
+def cumulative_product(numbers):
+    return reduce(lambda x, y: x * y, numbers)
+
+numbers = [2, 3, 4, 5]
+
+result = cumulative_product(numbers)
+
+print(result)
