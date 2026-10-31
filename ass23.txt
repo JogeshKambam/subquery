@@ -1,0 +1,127 @@
+
+-- 1. Employees earning more than average salary
+
+SELECT *
+FROM Employees
+WHERE salary > (
+    SELECT AVG(salary)
+    FROM Employees
+);
+
+
+-- 2. Employee(s) receiving maximum salary
+
+SELECT *
+FROM Employees
+WHERE salary = (
+    SELECT MAX(salary)
+    FROM Employees
+);
+
+
+-- 3. Employees earning more than Ravi
+
+SELECT *
+FROM Employees
+WHERE salary > (
+    SELECT salary
+    FROM Employees
+    WHERE emp_name = 'Ravi'
+);
+
+
+-- 4. Employees working in the same department as Kiran
+
+SELECT *
+FROM Employees
+WHERE department = (
+    SELECT department
+    FROM Employees
+    WHERE emp_name = 'Kiran'
+);
+
+
+-- 5. Find the second-highest salary
+
+SELECT MAX(salary) AS second_highest_salary
+FROM Employees
+WHERE salary < (
+    SELECT MAX(salary)
+    FROM Employees
+);
+
+
+-- 6. Employees earning minimum salary in their department
+
+SELECT *
+FROM Employees e
+WHERE salary = (
+    SELECT MIN(salary)
+    FROM Employees
+    WHERE department = e.department
+);
+
+
+ 7. Find the third-highest distinct salary
+
+SELECT DISTINCT salary
+FROM Employees
+ORDER BY salary DESC
+LIMIT 1 OFFSET 2;
+
+
+ 8. Display top 3 highest-paid employees
+
+SELECT *
+FROM Employees
+ORDER BY salary DESC
+LIMIT 3;
+
+
+ 9. Find duplicate salary values
+
+SELECT salary, COUNT(*) AS total_employees
+FROM Employees
+GROUP BY salary
+HAVING COUNT(*) > 1;
+
+
+ 10. Increase IT department salary by 10%
+
+UPDATE Employees
+SET salary = salary + (salary * 0.10)
+WHERE department = 'IT';
+
+
+ 11. Delete employees earning below 30000
+
+DELETE FROM Employees
+WHERE salary < 30000;
+
+
+ 12. Display employee names in uppercase
+
+SELECT UPPER(emp_name) AS employee_name
+FROM Employees;
+
+
+ 13. Find employees whose names contain letter 'a'
+
+SELECT *
+FROM Employees
+WHERE LOWER(emp_name) LIKE '%a%';
+
+
+ 14. Categorize employees based on salary
+
+SELECT
+    emp_name,
+    salary,
+    CASE
+        WHEN salary >= 50000 THEN 'High'
+        WHEN salary >= 30000 THEN 'Medium'
+        ELSE 'Low'
+    END AS salary_grade
+FROM Employees;
+
+
