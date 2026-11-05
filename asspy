@@ -1,45 +1,37 @@
-
-# 1. Prime Number
-is_prime = lambda n: n > 1 and all(n % i != 0 for i in range(2, n))
-print(is_prime(7))
-
-
-# 2. Armstrong Number
-is_armstrong = lambda n: n == sum(int(digit) ** len(str(n)) for digit in str(n))
-print(is_armstrong(153))
-
-
-# 3. Spy Number
-is_spy = lambda n: sum(int(digit) for digit in str(n)) == __import__('math').prod(int(digit) for digit in str(n))
-print(is_spy(123))
-
-
-# 4. Neon Number
-is_neon = lambda n: sum(int(digit) for digit in str(n * n)) == n
-print(is_neon(9))
-
-
-# 5. Digit Sum
-digit_sum = lambda n: sum(int(digit) for digit in str(n))
-print(digit_sum(123))
-
-
-# 6. Digit Product
-digit_product = lambda n: __import__('math').prod(int(digit) for digit in str(n))
-print(digit_product(123))
-
-
-# 7. Palindrome Number
-is_palindrome = lambda n: str(n) == str(n)[::-1]
-print(is_palindrome(121))
-
-
-# 8. Perfect Number
-is_perfect = lambda n: sum(i for i in range(1, n) if n % i == 0) == n
-print(is_perfect(28))
-
-
-# 9. Combined Lambda (Prime and Palindrome)
+import math
+# Prime number
+n=int(input("enter a value:"))
+is_prime = lambda n: n > 1 and all(n % i != 0 for i in range(2, int(n**0.5)+1))
+print("Prime:", is_prime(n))
+# Armstrong number
+n=int(input("enter a value:"))
+is_armstrong = lambda n: n >= 0 and n == sum(int(d)**len(str(n)) for d in str(n))
+print("Armstrong:", is_armstrong(n))
+# Digit sum
+n=int(input("enter a value:"))
+digit_sum = lambda n: sum(int(d) for d in str(abs(n)))
+print("Digit Sum:", digit_sum(n))
+# Digit product
+n=int(input("enter a value:"))
+digit_product = lambda n: math.prod(int(d) for d in str(abs(n)))
+print("Digit product:", digit_product(n))
+# Spy number
+n=int(input("enter a value:"))
+is_spy = lambda n: n >= 0 and digit_sum(n) == digit_product(n)
+print("spy number:", is_spy(n))
+# Neon number
+n=int(input("enter a value:"))
+is_neon = lambda n: n >= 0 and digit_sum(n*n) == n
+print("neon number:", is_neon(n))
+# Palindrome number
+n=int(input("enter a value:"))
+is_palindrome = lambda n: n >= 0 and str(n) == str(n)[::-1]
+print("palindrome:", is_palindrome(n))
+# Perfect number
+n=int(input("enter a value:"))
+is_perfect = lambda n: n > 1 and sum(i for i in range(1, n) if n % i == 0) == n
+print("perfect number", is_perfect(n))
+# Combined lambda
+n=int(input("enter a value:"))
 is_prime_palindrome = lambda n: is_prime(n) and is_palindrome(n)
-print(is_prime_palindrome(131))
-
+print("prime palindrome:", is_prime_palindrome(n))
