@@ -1,12 +1,17 @@
 #1
-t1="he llo wor ld"
-print(t1.replace(" ",""))
+def remove_spaces(s):
+    return ''.join(s.split())
+
+print(remove_spaces("he llo\twor ld"))
 #2
 t2="hello"
 print(t2[::-1])
 #3
-t3="he llo world"
-print(t3[::-1].replace(" ",""))
+def reverse_remove(s):
+    cleaned = ''.join(s.split())
+    return cleaned[::-1]
+
+print(reverse_remove("he llo world"))
 
 #4
 text = "my_variable_name"
@@ -22,9 +27,16 @@ for word in parts[1:]:
 print(result)
 
 #5
-text2="my_variable_name"
-parts2=text2.split("_")
-print("".join(parts2).title())
+def snake_to_pascal(s):
+    words = s.split("_")
+    result = ""
+
+    for word in words:
+        result += word.capitalize()
+
+    return result
+
+print(snake_to_pascal("my_variable_name"))
 
 #6
 def camel_to_snake(s):
@@ -60,7 +72,7 @@ def pascal_to_snake(s):
             result += "_" + ch.lower()
         else:
             result +=ch
-    return result.lstrip("_")
+    return result.lstrip("_").lower()
 
 print(pascal_to_snake("MyVariable"))
 
@@ -73,24 +85,28 @@ print(text_to_camel("hello word example"))
 
 #11
 def text_to_snake(s):
-    words = s.split()
+    words = s.lower().split()
     return "_".join(words)   
 
-print(text_to_snake("hello world example"))
+print(text_to_snake("hello World example"))
 
 #12
 def text_to_pascal(s):
-    words=s.title().replace(" ","")
-    return words
+    words = s.split()
+    result = ""
 
-print(text_to_pascal("hello world example"))   
+    for word in words:
+        result += word.capitalize()
+
+    return result
+
+print(text_to_pascal("hello world example"))  
 
 #13
-def swap(s):
-    words=s.swapcase()
-    return words
+def swap_case(s):
+    return text.swapcase()
 
-print(swap("HeLLo"))
+print(swap_case("HeLLo"))
 
 #14
 def extract_digits(s):
@@ -102,50 +118,65 @@ def extract_digits(s):
     return result      
 print(extract_digits("abc123d4"))
 
+#15
+def separate_char(text):
 
-s="AAbcc@123//"
+    upper = ""
+    lower = ""
+    digit = ""
+    Special = ""
 
-upper=""
-lower=""
-digit=""
-Special=""
+    for ch in text:
 
-for ch in s:
         if ch.isupper():
-            upper +=ch
+            upper += ch
+
         elif ch.islower():
             lower += ch
+
         elif ch.isdigit():
             digit += ch
+
         else:
-            Special +=ch
+            Special += ch
 
-print("upper:",upper)
-print("lower:",lower)
-print("digit:",digit) 
-print("Special:",Special)     
+    print("Upper:", upper)
+    print("Lower:", lower)
+    print("Digit:", digit)
+    print("Special:", Special)
 
-s="AAbcc@123//"
 
-upper=0
-lower=0
-digit=0
-Special=0
+separate_char("AAbcc@123//")
 
-for ch in s:
+#16
+def count_char(text):
+
+    upper = 0
+    lower = 0
+    digit = 0
+    Special = 0
+
+    for ch in text:
+
         if ch.isupper():
-            upper +=1
+            upper += 1
+
         elif ch.islower():
             lower += 1
+
         elif ch.isdigit():
             digit += 1
-        else:
-            Special +=1
 
-print("upper:",upper)
-print("lower:",lower)
-print("digit:",digit) 
-print("Special:",Special)
+        else:
+            Special += 1
+
+    print("Upper:", upper)
+    print("Lower:", lower)
+    print("Digit:", digit)
+    print("Special:", Special)
+
+
+count_char("AAbcc@123//")
 
 #17 password strength check
 def check_password(password):
@@ -228,7 +259,7 @@ def first_max(list):
  for i in list:
    if i>l: #change > to < for min 
       l=i
-      return l
+ return l
 print(first_max([4,7,1,9]))   
 
 l=[1,2,3]
@@ -238,7 +269,7 @@ def sum_list(list):
    s=0
    for i in list:
       s+=i
-      return s
+   return s
  
 print(sum_list([1,2,3]))
 
@@ -298,7 +329,7 @@ print(common([1,2,4,7,8],[1,2,5,4,6]))
 def even(l1):
    l=[]
    for i in l1:
-      if i%2!=0:
+      if i%2==0:
          l.append(i)
    return l
 
@@ -315,6 +346,8 @@ print(pali([1,2,1]))
 def pal(l1):
    if l1 == l1[::-1]:
       return True
+   else:
+      return False   
 
 print(pal([1,4,1]))  
 
@@ -539,7 +572,7 @@ def negative_ot(lst):
    result=[]
 
    for i in lst:
-      if i>=0:
+      if i<=0:
          result.append(i)
 
    return result
