@@ -1,0 +1,126 @@
+use company;
+show tables;
+#DDL
+create table department(dept_id int primary key auto_increment,dept_name varchar(30),location varchar(30));
+select * from department;
+create table employee(emp_id int primary key auto_increment,emp_name varchar(30),job varchar(30),manager_id int,hire_date date,salary int,commission int,dept_id int,foreign key (dept_id) references department(dept_id));
+select * from employee;
+desc employee;
+desc department;
+desc projects;
+create table project(proj_id int primary key auto_increment,proj_name varchar(30) unique not null,budget decimal(10,2) check (budget>0),dept_id int,foreign key (dept_id) references department(dept_id));
+select *  from projects;
+alter table project
+add column start_date date;
+alter table project
+modify proj_name varchar(50);
+rename table project to projects;
+set sql_safe_updates=0;
+alter table projects drop start_date;
+truncate projects;
+#DML
+insert into projects values(1,"water",550000,10),(2,"fire",600000,20);
+update employee
+set salary=salary*1.10
+where dept_id=(select dept_id from department where dept_name="it" );
+update employee
+set commission=0
+where commission is null and dept_id=(select dept_id from department where dept_name="sales");
+delete from employee
+where hire_date<'2017-01-01';
+select * from employee;
+insert into employee(emp_name,job) select emp_name,job from employee where emp_id=101;
+insert into employee(emp_name,job) select dept_name,location from department where dept_id=10;
+insert into employee(emp_id,dept_id) select dept_id,dept_id from department where dept_id=10;
+delete from employee where emp_id in (10,111,112);
+#DQL
+select emp_name,job,salary from employee where salary between 40000 and 60000 or (salary>40000 and salary<60000);
+select * from employee where emp_name like 'h%a';
+select * from employee where commission is null and manager_id is null;
+select emp_name,salary from employee order by salary desc limit 3 offset 1; 
+select distinct job from employee order by job asc;
+select * from employee where dept_id in (10,30) or dept_id=10 or dept_id=30;
+#TCL
+set autocommit=0;
+update employee
+set salary=35000
+where emp_id=109;
+start transaction;
+savepoint a;
+delete from employee
+where emp_id=106;
+rollback to a;
+commit;
+#DCL
+select current_user();
+show grants;
+create user analyst@localhost identified by "12345";
+select * from mysql.user;
+grant select on company.employee to 'analyst'@'localhost';
+select * from employee;
+insert into employee(emp_id) select dept_id from department where dept_id=10;
+delete from employee where emp_id=10;
+#FUCTIONS
+#SINGLE ROW FUNCTIONS
+select upper(emp_name),length(emp_name),left(emp_name,3) from employee;
+select concat(emp_name,"-",job) as ej from employee;
+select timestampdiff(year, hire_date, curdate()),monthname(hire_date) from employee;
+select salary+ifnull(commission,0) as totalpay from employee;
+select emp_name,case when salary>=80000 then "high" when salary>=50000 then "medium" else "low" end as level  from employee;
+select round(salary),mod(salary,7) from employee; 
+#aggregate functions
+select sum(salary),avg(salary),min(salary),max(salary),count(*) from employee;
+select count(*),count(commission),count(distinct dept_id) from employee;
+select avg(salary),dept_id from employee group by dept_id having avg(salary)>50000;
+select job,count(*) from employee group by job;
+select dept_id,emp_name,max(salary) from employee group by dept_id;
+#where is to filter condtion while having is also a filter condtion to filter the group by conditons.
+#WINDOW FUNCTIONS
+select salary,dept_id,row_number() over (partition by dept_id order by salary desc) as rn,dense_rank() over(partition by dept_id order by salary desc) as dr,rank() over(partition by dept_id order by salary desc) as r from employee;
+select salary,dept_id,avg(salary) over (partition by dept_id) from employee;
+select hire_date,salary,SUM(salary) OVER (ORDER BY hire_date) AS running_total from employee;
+SELECT hire_date,salary,LAG(salary) OVER (ORDER BY hire_date) AS previous_salary,
+LEAD(salary) OVER (ORDER BY hire_date) AS next_salary FROM employee;
+WITH ranked_employees AS (SELECT emp_id,emp_name,dept_id,salary,DENSE_RANK() OVER (
+PARTITION BY dept_id ORDER BY salary DESC) AS salary_rank FROM employee)
+SELECT * FROM ranked_employees WHERE salary_rank <= 2;
+#Groups rows together	in window function Retains individual rows
+#JOINS
+#inner
+select e.emp_name,e.job,d.dept_name,d.location
+from employee e inner join department d
+on e.dept_id=d.dept_id;
+select count(e.emp_id),e.dept_id,d.dept_name from employee e inner join department d on d.dept_id=e.dept_id group by d.dept_id,d.dept_name;
+#left&right
+select e.emp_name,d.dept_name from employee e left outer join department d on e.dept_id=d.dept_id;
+select e.emp_name as employee,e1.emp_name as empmgr
+from employee e join employee e1
+on e.manager_id=e1.emp_id;
+
+select * from employee;
+
+select e.emp_name,count(e.emp_id) as m
+from employee e join employee e1
+on e1.manager_id=e.emp_id
+group by e.emp_name;
+select e1.emp_name,e1.salary,e.emp_name,e.salary
+from employee e join employee e1
+on e.manager_id=e1.emp_id
+where e.salary<e1.salary;
+select * from employee ;
+select e.emp_name,e1.emp_name,e1.job
+from employee e join employee e1
+on e.job=e1.job and e.dept_id=e1.dept_id and e.emp_id<e1.emp_id;
+select e1.emp_name,e2.emp_name,e1.dept_id,e1.job
+from employee e1 join employee e2
+on e1.dept_id = e2.dept_id and e1.job = e2.job and e1.emp_id < e2.emp_id;
+select * from employee e cross join department d;
+#subqueries
+select * from employee where salary>(select salary from employee where emp_name="bhavya");
+select * from employee where salary>(select avg(salary) from employee);
+select * from employee where dept_id=(select dept_id from employee where emp_name like "eshwar");
+select max(salary) from employee where salary<(select max(salary) from employee); 
+select salary from employee order by salary;
+select avg(salary),emp_name from employee where salary;
+select * from employee where dept_id in (select dept_id from department where location='chennai'or location='bangalore');
+Displaying ALL SQL.sql.
